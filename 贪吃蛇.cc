@@ -4,10 +4,13 @@
 #include <stdlib.h>
 #include "snake.h"
 int main() {
-  Map map0;
-  map0.Initialize();
-  Snake snake0(1, map0);
-  map0.display();
+  Map m;
+  m.Initialize();
+  Snake s(5, m);
+  do {
+  m.display();
+  s.Move(m);
+  } while (g_GameOver);
   return 0;
 }
 
