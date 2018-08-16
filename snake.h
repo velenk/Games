@@ -1,6 +1,6 @@
 #ifndef _SNAKE_H_
 #define _SNAKE_H_
-#define _TEST_
+//#define _TEST_
 
 //default = ' '
 //snake = *
@@ -43,7 +43,8 @@ public://initialize map
   void Set(int x, int y, char c) {
     map[x][y] = c;
   }
-  void display();//display to screen
+  void Display();//display to screen
+  void NewApple();
 private:
   char map[k_Size+2][k_Size+2];//map's character
   int head = 0;
@@ -61,6 +62,7 @@ Snake::Snake(int a, Map& map0) : x(1), y(a), lenth(a), direction('d') {
   }
   map0.map[1][a] = '#';
   map0.head = a-1;
+  map0.NewApple();
 }
 //move snake
 void Snake::Move(Map& map0) {
@@ -115,11 +117,12 @@ void Snake::Move(Map& map0) {
     if (lenth >= k_Size * k_Size) {
       g_GameOver = false;
     }
+    map0.NewApple();
   }
   map0.Set(x1, y1, '#');
 }
 //display map to screen
-void Map::display() {
+void Map::Display() {
   system("cls");
   for (i = 0; i < k_Size+2; i++) {
     std::cout << "    ";
@@ -128,5 +131,15 @@ void Map::display() {
     }
     std::cout << std::endl;
   }
+}
+//make a new apple
+void Map::NewApple() {
+  int x2 = 0, y2 = 0;
+  srand(time(0));
+  while (map[x2][y2] != ' ') {
+    x2 = rand() % k_Size + 1;
+    y2 = rand() % k_Size + 1;
+  }
+  Set(x2, y2, '@');
 }
 #endif
