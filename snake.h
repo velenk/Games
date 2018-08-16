@@ -1,5 +1,6 @@
 #ifndef _SNAKE_H_
 #define _SNAKE_H_
+#define _TEST_
 
 //default = ' '
 //snake = *
@@ -49,7 +50,7 @@ private:
   int tail = 0;
 };
 //snake's structure
-Snake::Snake(int a, Map& map0) : x(1), y(a), lenth(a), direction(77) {
+Snake::Snake(int a, Map& map0) : x(1), y(a), lenth(a), direction('d') {
   for (i = 0; i < k_Size*k_Size; i++) {
     snake[i][0] = snake[i][1] = 0;
   }
@@ -63,39 +64,53 @@ Snake::Snake(int a, Map& map0) : x(1), y(a), lenth(a), direction(77) {
 }
 //move snake
 void Snake::Move(Map& map0) {
-  bool getchar = true;
+  bool get = true;
   auto start = clock();
   char key = direction;
-  while (getchar = (clock() - start < k_Time) && !kbhit());//time run out or hit keyboard
-  if (getchar){
-    getch();
+  while ((get = (clock() - start < k_Time)) && !kbhit()) { }//time run out or hit keyboard
+  #ifdef _TEST_
+  std::cout << get << std::endl;
+  #endif
+  if (get){
     key = getch();
   }
-  getchar = true;
+  #ifdef _TEST_
+  std::cout << key << std::endl;
+  #endif
   if (key == ' ') {
-    while (!kbhit()) { };
+    char a = '1';
+    while (a != ' ') {
+      a = getch();
+    };
   }//pause game by space and continue by any key
-  if (key == 72 || key == 75 || key == 77 || key == 80) {
+  if (key == 'w' || key == 's' || key == 'a' || key == 'd') {
     direction = key;
+    #ifdef _TEST_
+    std::cout << direction << std::endl;
+    #endif
   }
   int x1 = snake[map0.head][0];
   int y1 = snake[map0.head][1];
   map0.Set(x1, y1, '*');
   switch (direction) {
-    case 72 : x1 += 1; break;//up
-    case 80 : x1 -= 1; break;//down
-    case 75 : y1 -= 1; break;//left
-    case 77 : y1 += 1;//right
+    case 'w' : x1 -= 1; break;//up
+    case 's' : x1 += 1; break;//down
+    case 'a' : y1 -= 1; break;//left
+    case 'd' : y1 += 1;//right
   }
+  #ifdef _TEST_
+  std::cout << x1 << " " << y1 << std::endl;
+  #endif
   map0.head = (map0.head + 1) % (k_Size * k_Size);//update head
   snake[map0.head][0] = x1;
   snake[map0.head][1] = y1;//update snake
   if (map0.map[x1][y1] != ' ' && map0.map[x1][y1] != '@') {
     g_GameOver = false;
   }
-  if (map0.map[x1][y1] != '@') {//eat apple
+  if (map0.map[x1][y1] != '@') {//don't eat apple
+    map0.Set(snake[map0.tail][0], snake[map0.tail][1], ' ');
     map0.tail = (map0.tail + 1) % (k_Size * k_Size);//update tail
-  } else {
+  } else {//eat apple
     lenth += 1;
     if (lenth >= k_Size * k_Size) {
       g_GameOver = false;
